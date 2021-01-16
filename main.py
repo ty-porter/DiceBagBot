@@ -1,9 +1,25 @@
-import d20, praw, re, traceback
+import d20
+import os
+import praw 
+import re
+import traceback
+
+# Check if it's a remote instance, otherwise, load ENV from dotenv
+if not os.getenv('ENVIRONMENT') == 'PRODUCTION':
+    from dotenv import load_dotenv, find_dotenv
+    load_dotenv(find_dotenv())
 
 with open('VERSION') as version:
     VERSION = version.read()
 
-reddit = praw.Reddit('bot', user_agent='DiceBagBot by /u/pawptart v{}'.format(VERSION))
+reddit = praw.Reddit(
+    username=os.environ.get('USERNAME'),
+    password=os.environ.get('PASSWORD'),
+    client_id=os.environ.get('CLIENT_ID'),
+    client_secret=os.environ.get('CLIENT_SECRET'),
+    user_agent='DiceBagBot by /u/pawptart v{}'.format(VERSION)
+)
+
 stream = praw.models.util.stream_generator(reddit.inbox.mentions, skip_existing=True)
 
 PREFIXES = ['!'] # more can be added as required

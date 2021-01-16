@@ -1,3 +1,4 @@
 /venv/
 
-praw.ini
+# Local .env files
+.env
